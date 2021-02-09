@@ -15,6 +15,7 @@ router.all("*", function (req, res, next) {
   else next();
 });
 
+// 查询userinfo表
 router.get("/", (req, res) => {
   const sql = "select * from userinfo";
   sqlQuery(sql, (data) => {
@@ -26,16 +27,14 @@ router.get("/", (req, res) => {
   });
 });
 
+// 登录
 router.post("/api/auth/login", function (req, res) {
   const { username, password } = { ...req.body };
-  console.log(username);
-  console.log(password);
   const sql = `select * from userinfo where username='${username}' and password='${password}'`;
   sqlQuery(sql, (data) => {
     if (data.length > 0)
       return res.send({
         code: "200",
-        data: { ...data[0] },
         result: { token: "4291d7da9005377ec9aec4a71ea837f" },
         message: "登录成功",
       });
@@ -47,12 +46,12 @@ router.post("/api/auth/login", function (req, res) {
   });
 });
 
+// 注册
 router.post("/api/register", (req, res) => {
   const { username, password } = { ...req.body };
   const sql = `select * from userinfo where username='${username}'`;
 
   sqlQuery(sql, (data) => {
-    console.log(data);
     if (data.length == 0) {
       const sql = `insert into userinfo values('${username}',null,'${password}')`;
       sqlQuery(sql, (data) => {
@@ -70,6 +69,7 @@ router.post("/api/register", (req, res) => {
   });
 });
 
+// 修改密码
 router.post("/api/passwordChange", (req, res) => {
   const { username, password, newPassword } = { ...req.body };
   const sql = `select * from userinfo where username='${username}' AND password='${password}' `;
